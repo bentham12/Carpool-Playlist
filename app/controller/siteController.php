@@ -5,7 +5,7 @@ session_start();
 
 <?php
 
-require '../../vendor/autoload.php';
+require '../vendor/autoload.php';
 
 include_once '../global.php';
 require 'vendor/autoload.php';
