@@ -59,8 +59,7 @@ class SiteController {
 			exit();
 		}*/
 		$pageName = 'Home';
-		include_once SYSTEM_PATH.'/view/header.tpl';
-		include_once SYSTEM_PATH.'/view/user_page.tpl';
+		
 		//include_once SYSTEM_PATH.'/view/footer.tpl';
 		
 		$session = new SpotifyWebAPI\Session('440c0bbf7ed7432ba9dad860846feabd', 'b903d161500c40fca04251d615f04c03', BASE_URL."/home/");
@@ -74,7 +73,27 @@ class SiteController {
 		// Set the access token on the API wrapper
 		$api->setAccessToken($accessToken);
 		
-		print_r($api->getAlbum('7u6zL7kqpgLPISZYXNTgYk'));
+		$playlists = $api->getMyPlaylists(array());
+
+		foreach ($playlists->items as $playlist) {
+			if ($playlist->collaborative) {
+				$collabPlay[] = $playlist;
+			}
+		}
+		
+		include_once SYSTEM_PATH.'/view/header.tpl';
+		include_once SYSTEM_PATH.'/view/user_page.tpl';
+		
+		/*foreach ($playlists->items as $playlist) {
+			if ($playlist->collaborative) {
+				print_r("Collaborative playlist: ");
+			}
+			else {
+				print_r("Non-collaborative playlist: ");
+			}
+			echo '<a href="' . $playlist->external_urls->spotify . '">' . $playlist->name . '</a> <br>';
+		}
+		print_r($api->me()->id);*/
   }
 
   /*public function items() {
@@ -155,36 +174,16 @@ class SiteController {
 		
 		$scopes = array(
 			'playlist-read-private',
-			'user-read-private'
+			'user-read-private',
+			'playlist-read-collaborative'
 		);
 		$authorizeUrl = $session->getAuthorizeUrl(array(
 			'scope' => $scopes
 		));
 		
-		$_SESSION['user'] = "user";		
-		
-		//$_SESSION['api'] = new SpotifyWebAPI\SpotifyWebAPI();
-		
-		/*print_r($authorizeUrl);
-		$query_str = parse_url($authorizeUrl, PHP_URL_QUERY);
-		parse_str($query_str, $query_params);
-		print_r($query_params);*/
+		$_SESSION['user'] = "user";
 		
 		header('Location: ' . $authorizeUrl);
-		
-		/*
-		// Request a access token using the code from Spotify
-		$session->requestAccessToken($_GET['code']);
-		//$session->requestAccessToken($query['code']);
-		$accessToken = $session->getAccessToken();
-
-		// Set the access token on the API wrapper
-		$_SESSION['api']->setAccessToken($accessToken);
-		
-		print_r($_SESSION['user']);
-		
-		header('Location: ' . $authorizeUrl);
-		*/
 		
 		die();
 		// include_once SYSTEM_PATH.'/view/footer.tpl';
