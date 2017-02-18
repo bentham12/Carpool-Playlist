@@ -1,6 +1,7 @@
 <?php
 
 include_once '../global.php';
+require 'vendor/autoload.php';
 
 // get the identifier for the page we want to load
 $action = $_GET['action'];
@@ -8,6 +9,7 @@ $action = $_GET['action'];
 // instantiate a SiteController and route it
 $pc = new SiteController();
 $pc->route($action);
+
 
 class SiteController {
 
@@ -31,7 +33,7 @@ class SiteController {
 
   public function home() {
 		$pageName = 'Home';
-		//include_once SYSTEM_PATH.'/view/header.tpl';
+		include_once SYSTEM_PATH.'/view/header.tpl';
 		include_once SYSTEM_PATH.'/view/user_page.tpl';
 		//include_once SYSTEM_PATH.'/view/footer.tpl';
   }
