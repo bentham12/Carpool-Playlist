@@ -2,7 +2,9 @@ Options -Indexes
 
 RewriteEngine on
 
-RewriteRule ^$ app/controller/siteController.php?action=home [QSA,L]
+RewriteRule ^$ app/controller/siteController.php?action=login [QSA,L]
+
+RewriteRule ^home/?.* app/controller/siteController.php?action=home [QSA,L]
 
 RewriteRule ^itemlisting/?$ app/controller/siteController.php?action=itemlisting [QSA,L]
 
@@ -10,9 +12,9 @@ RewriteRule ^sellitem/?$ app/controller/siteController.php?action=sellitem [QSA,
 
 RewriteRule ^sellitem/submission?$ app/controller/siteController.php?action=submission [QSA,L]
 
-RewriteRule ^login/?$ app/controller/siteController.php?action=login [QSA,L]
-
 RewriteRule ^login/processLogin?$ app/controller/siteController.php?action=processLogin [QSA,L]
+
+RewriteRule ^login/?$ app/controller/siteController.php?action=login [QSA,L]
 
 RewriteRule ^mysales/?$ app/controller/siteController.php?action=mysales [QSA,L]
 
