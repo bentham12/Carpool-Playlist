@@ -18,57 +18,7 @@ class SiteController {
 				$this->home();
 				break;
 
-      case 'itemlisting':
-        $this->items();
-        break;
-
-      case 'sellitem':
-        $this->sell();
-        break;
-
-      case 'submission':
-        $this->submission();
-        break;
-
-			case 'mysales':
-				$this->mysales();
-				break;
-
-			case 'login':
-				$this->login();
-				break;
-
-			case 'processLogin':
-				$username = $_POST['u'];
-				$password = $_POST['p'];
-				$this->processLogin($username, $password);
-				break;
-
-			case 'listitem':
-				$productID = $_GET['pid'];
-				$this->listitem($productID);
-				break;
-
-			case 'edititem':
-				$this->edititem();
-				break;
-
-			case 'deleteitem':
-				$this->deleteitem();
-				break;
-
-			case 'processEdit':
-				//grabs values from post so we can pass along to the DB update function
-				$item_name = $_POST['item_name'];
-				$current_price = $_POST['current_price'];
-				$end_date = $_POST['end_date'];
-				$description = $_POST['description'];
-				$this->processEdit($item_name, $current_price, $end_date, $description);
-				break;
-
-			case 'processDelete':
-				$this->processDelete();
-				break;
+      
 
 			// redirect to home page if all else fails
       default:
@@ -81,9 +31,9 @@ class SiteController {
 
   public function home() {
 		$pageName = 'Home';
-		include_once SYSTEM_PATH.'/view/header.tpl';
-		include_once SYSTEM_PATH.'/view/home.tpl';
-		include_once SYSTEM_PATH.'/view/footer.tpl';
+		//include_once SYSTEM_PATH.'/view/header.tpl';
+		include_once SYSTEM_PATH.'/view/user_page.tpl';
+		//include_once SYSTEM_PATH.'/view/footer.tpl';
   }
 
   public function items() {

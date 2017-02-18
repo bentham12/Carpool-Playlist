@@ -2,7 +2,7 @@
 
 // path constants
 define('SYSTEM_PATH', dirname(__FILE__));
-define('BASE_URL','http://localhost/cs3744/rgrant9');
+define('BASE_URL','http://localhost/Carpool-Playlist');
 
 // database constants
 define('DB_HOST','127.0.0.1');
