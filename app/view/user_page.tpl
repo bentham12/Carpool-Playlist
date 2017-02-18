@@ -78,52 +78,32 @@
 
                 <div class="well">
 
-                    <div class="text-right">
-                        <a class="btn btn-success">Leave a Review</a>
+                    <div class="text-left">
+                        <p>Voting</p>
                     </div>
 
                     <hr>
 
                     <div class="row">
-                        <div class="col-md-12">
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star-empty"></span>
-                            Anonymous
-                            <span class="pull-right">10 days ago</span>
-                            <p>This product was great in terms of quality. I would definitely buy another!</p>
+                        <div class="col-sm-2">
+                            <img class="img-responsive" src="http://placehold.it/128x128" alt="" width="64" height="64">
                         </div>
-                    </div>
-
-                    <hr>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star-empty"></span>
-                            Anonymous
-                            <span class="pull-right">12 days ago</span>
-                            <p>I've alredy ordered another one!</p>
+						<div class="col-sm-8">
+                            <p>Song name</p>
+							<p>Song Artist</p>
                         </div>
-                    </div>
-
-                    <hr>
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star-empty"></span>
-                            Anonymous
-                            <span class="pull-right">15 days ago</span>
-                            <p>I've seen some better than this, but not at this price. I definitely recommend this item.</p>
+						<div class="col-sm-2">
+							<div class="col-sm-6">
+								<form>
+									<button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-ok"></i></button>
+								</form>
+							</div>
+							<div class="col-sm-6">
+								<form>
+									<button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-remove"></i></button>
+								</form>
+							</div>
+							<p class="text-center">Vote info</p>
                         </div>
                     </div>
 
