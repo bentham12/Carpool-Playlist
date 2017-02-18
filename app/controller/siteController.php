@@ -1,4 +1,9 @@
 <?php
+// Start the session
+session_start();
+?>
+
+<?php
 
 require '../../vendor/autoload.php';
 
@@ -10,8 +15,11 @@ $action = $_GET['action'];
 // instantiate a SiteController and route it
 $pc = new SiteController();
 $pc->route($action);
+$session;
 
 class SiteController {
+	
+	
 
 	// route us to the appropriate class method for this action
 	public function route($action) {
@@ -22,7 +30,11 @@ class SiteController {
 			
 			case 'login':
 				$this->login();
-				break;      
+				break;
+
+			case 'loginProcess':
+				$this->loginProcess();
+				break;
 
 			// redirect to home page if all else fails
       default:
@@ -34,7 +46,7 @@ class SiteController {
 	}
 
   public function home() {
-		session_start();
+		//global $api;
 		/*if (isset($_SESSION['user'])){
 			$pageName = 'Home';
 			//include_once SYSTEM_PATH.'/view/header.tpl';
@@ -48,6 +60,19 @@ class SiteController {
 		//include_once SYSTEM_PATH.'/view/header.tpl';
 		include_once SYSTEM_PATH.'/view/user_page.tpl';
 		//include_once SYSTEM_PATH.'/view/footer.tpl';
+		
+		$session = new SpotifyWebAPI\Session('440c0bbf7ed7432ba9dad860846feabd', 'b903d161500c40fca04251d615f04c03', BASE_URL."/home/");
+		
+		$api = new SpotifyWebAPI\SpotifyWebAPI();
+
+		// Request a access token using the code from Spotify
+		$session->requestAccessToken($_GET['code']);
+		$accessToken = $session->getAccessToken();
+
+		// Set the access token on the API wrapper
+		$api->setAccessToken($accessToken);
+		
+		print_r($api->getAlbum('7u6zL7kqpgLPISZYXNTgYk'));
   }
 
   /*public function items() {
@@ -118,7 +143,9 @@ class SiteController {
 		}
 	}*/
 
-	public function login(){
+	public function login() {			
+		global $session;
+		
 		$pageName = "Login";
 		// include_once SYSTEM_PATH.'/view/header.tpl';
 		include_once SYSTEM_PATH.'/view/login.tpl';
@@ -134,20 +161,42 @@ class SiteController {
 		
 		$_SESSION['user'] = "user";		
 		
+		//$_SESSION['api'] = new SpotifyWebAPI\SpotifyWebAPI();
+		
+		/*print_r($authorizeUrl);
+		$query_str = parse_url($authorizeUrl, PHP_URL_QUERY);
+		parse_str($query_str, $query_params);
+		print_r($query_params);*/
+		
 		header('Location: ' . $authorizeUrl);
 		
-		$api = new SpotifyWebAPI\SpotifyWebAPI();
-
+		/*
 		// Request a access token using the code from Spotify
 		$session->requestAccessToken($_GET['code']);
+		//$session->requestAccessToken($query['code']);
 		$accessToken = $session->getAccessToken();
 
 		// Set the access token on the API wrapper
-		$api->setAccessToken($accessToken);
+		$_SESSION['api']->setAccessToken($accessToken);
 		
 		print_r($_SESSION['user']);
+		
+		header('Location: ' . $authorizeUrl);
+		*/
+		
 		die();
 		// include_once SYSTEM_PATH.'/view/footer.tpl';
+	}
+	
+	public function loginProcess() {
+		global $session;
+		global $accessToken;
+		
+		print_r($session);
+		
+		
+		
+		//header('Location: ' .BASE_URL."/home/");
 	}
 
 	/*public function mysales(){
@@ -264,3 +313,4 @@ class SiteController {
 		include_once SYSTEM_PATH.'/view/footer.tpl';
 	}*/
 }
+?>

@@ -12,7 +12,7 @@ RewriteRule ^sellitem/?$ app/controller/siteController.php?action=sellitem [QSA,
 
 RewriteRule ^sellitem/submission?$ app/controller/siteController.php?action=submission [QSA,L]
 
-RewriteRule ^login/processLogin?$ app/controller/siteController.php?action=processLogin [QSA,L]
+RewriteRule ^loginProcess/?.* app/controller/siteController.php?action=loginProcess [QSA,L]
 
 RewriteRule ^login/?$ app/controller/siteController.php?action=login [QSA,L]
 
