@@ -1,5 +1,7 @@
 <?php
 
+require '../../vendor/autoload.php';
+
 include_once '../global.php';
 
 // get the identifier for the page we want to load
@@ -17,8 +19,10 @@ class SiteController {
 			case 'home':
 				$this->home();
 				break;
-
-      
+			
+			case 'login':
+				$this->login();
+				break;      
 
 			// redirect to home page if all else fails
       default:
@@ -30,13 +34,23 @@ class SiteController {
 	}
 
   public function home() {
+		session_start();
+		/*if (isset($_SESSION['user'])){
+			$pageName = 'Home';
+			//include_once SYSTEM_PATH.'/view/header.tpl';
+			include_once SYSTEM_PATH.'/view/user_page.tpl';
+			//include_once SYSTEM_PATH.'/view/footer.tpl';
+		} else {
+			header("LOCATION: ".BASE_URL."/login/");
+			exit();
+		}*/
 		$pageName = 'Home';
 		//include_once SYSTEM_PATH.'/view/header.tpl';
 		include_once SYSTEM_PATH.'/view/user_page.tpl';
 		//include_once SYSTEM_PATH.'/view/footer.tpl';
   }
 
-  public function items() {
+  /*public function items() {
     $pageName = 'Items Listing';
 
     $conn = mysql_connect(DB_HOST, DB_USER, DB_PASS) or die("Error: Could not connect to database");
@@ -102,16 +116,41 @@ class SiteController {
 		else{
 			header('Location: '.BASE_URL);
 		}
-	}
+	}*/
 
 	public function login(){
 		$pageName = "Login";
-		include_once SYSTEM_PATH.'/view/header.tpl';
+		// include_once SYSTEM_PATH.'/view/header.tpl';
 		include_once SYSTEM_PATH.'/view/login.tpl';
-		include_once SYSTEM_PATH.'/view/footer.tpl';
+		$session = new SpotifyWebAPI\Session('440c0bbf7ed7432ba9dad860846feabd', 'b903d161500c40fca04251d615f04c03', BASE_URL."/home/");
+		
+		$scopes = array(
+			'playlist-read-private',
+			'user-read-private'
+		);
+		$authorizeUrl = $session->getAuthorizeUrl(array(
+			'scope' => $scopes
+		));
+		
+		$_SESSION['user'] = "user";		
+		
+		header('Location: ' . $authorizeUrl);
+		
+		$api = new SpotifyWebAPI\SpotifyWebAPI();
+
+		// Request a access token using the code from Spotify
+		$session->requestAccessToken($_GET['code']);
+		$accessToken = $session->getAccessToken();
+
+		// Set the access token on the API wrapper
+		$api->setAccessToken($accessToken);
+		
+		print_r($_SESSION['user']);
+		die();
+		// include_once SYSTEM_PATH.'/view/footer.tpl';
 	}
 
-	public function mysales(){
+	/*public function mysales(){
 		session_start();
 		if (isset($_SESSION['user'])){
 			$pageName = "Current Sales";
@@ -223,5 +262,5 @@ class SiteController {
 		echo "<br></br><br></br>";
 		echo "<h3 text-align=center>Successfully deleted item</h3>";
 		include_once SYSTEM_PATH.'/view/footer.tpl';
-	}
+	}*/
 }
