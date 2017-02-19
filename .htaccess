@@ -4,7 +4,9 @@ RewriteEngine on
 
 RewriteRule ^$ app/controller/siteController.php?action=login [QSA,L]
 
-RewriteRule ^home/?.* app/controller/siteController.php?action=home [QSA,L]
+RewriteRule ^home/search/?.* app/controller/siteController.php?action=search [QSA,L]
+
+RewriteRule ^home/?$ app/controller/siteController.php?action=home [QSA,L]
 
 RewriteRule ^itemlisting/?$ app/controller/siteController.php?action=itemlisting [QSA,L]
 

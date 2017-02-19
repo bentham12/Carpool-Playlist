@@ -37,6 +37,10 @@ class SiteController {
 			case 'loginProcess':
 				$this->loginProcess();
 				break;
+				
+			case 'search':
+				$this->search($_GET['term']);
+				break;
 
 			// redirect to home page if all else fails
       default:
@@ -94,6 +98,19 @@ class SiteController {
 			echo '<a href="' . $playlist->external_urls->spotify . '">' . $playlist->name . '</a> <br>';
 		}
 		print_r($api->me()->id);*/
+  }
+  
+  public function search($search_term)
+  {
+		$api = new SpotifyWebAPI\SpotifyWebAPI();
+		$results = $api->search($search_term, 'track');
+
+		foreach ($results->tracks->items as $track) {
+			$track_listing[] = $track;
+		}
+	  
+		include_once SYSTEM_PATH.'/view/header.tpl';
+		include_once SYSTEM_PATH.'/view/search_results.tpl';
   }
 
   /*public function items() {
@@ -199,6 +216,7 @@ class SiteController {
 		
 		//header('Location: ' .BASE_URL."/home/");
 	}
+	
 
 	/*public function mysales(){
 		session_start();
