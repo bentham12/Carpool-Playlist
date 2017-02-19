@@ -39,25 +39,59 @@ class Db {
         }
       }
     }
-    public function getSongVotes($songID, $playlistID. $userID) {
+
+    //returns the votes a specific user has made
+    public function getUsersVotes($songID, $playlistID, $userID) {
       if(($songID !== null) && ($playlistID !== null) && ($userID !== null)) {
-        $query = sprintf("SELECT decision from vote_record WHERE song_id = '%s' AND playlist_id = '%s' AND user_id = '%s';",
+        $query = sprintf("SELECT decision from vote_record WHERE song_id = '%s' AND playlist_id = '%s' AND user_id = '%s' AND decision != 2;",
           $songID,
           $playlistID,
           $userID
         );
 
-      //echo $query
-      $result = $this->lookup($query);
+        //echo $query
+        $result = $this->lookup($query);
 
-      if(!mysql_num_rows($result)) {
-        return null;
-      } else {
-        $row = mysql_fetch_assoc($result);
-        $obj = new $class_name($row);
-        return $obj;
+        if(!mysql_num_rows($result)) {
+          return null;
+        } else {
+          $row = mysql_fetch_assoc($result);
+          $obj = new $class_name($row);
+          return $obj;
+        }
       }
     }
-  }
-  
+
+    //returns the net of song votes and the percent of votes (positive)
+    public function getNetAndPercentVotes($playlistID, $songID) {
+      if (($playlistID !== null) && (songID !== null)) {
+        $queryYes = sprintf("SELECT decision from vote_record WHERE song_id = '%s' AND playlist_id = '%s' AND decision = 1;"
+          $songID,
+          $playlistID
+        );
+
+        //echo $queryYes
+
+        $queryNo = sprintf("SELECT decision from vote_record WHERE song_id = '%s' AND playlist_id = '%s' AND decision = 0;"
+          $songID,
+          $playlist_id
+        );
+
+        //echo $queryNo
+
+        $resultYes = $this->lookup($queryYes);
+        $resultNo = $this->lookup($queryNo);
+
+        if(!mysql_num_rows($resultYes)) {
+          return null;
+        } else {
+          $NumYesVotes = mysql_num_rows($resultYes)
+          $NumNoVotes = mysql_num_rows($resultNo)
+          $NetVotes = $NumYesVotes - $NumNoVotes
+          $PercentVotes = $NumYesVotes / ($NumYesVotes + $NumNoVotes)
+          return $NetVotes, $PercentVotes
+        }
+      }
+    }
+
 }
