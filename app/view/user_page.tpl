@@ -12,7 +12,11 @@
                 <p class="lead">Collaborative Playlists</p>
                 <div class="list-group">
 					<?php foreach ($collabPlay as $playlist): ?>
-                    <a href="#" class="list-group-item"><?php echo $playlist->name ?></a>
+					<?php if (isset($_SESSION['plID']) && $playlist->id == $_SESSION['plID']): ?>
+						<a href="<?=BASE_URL?>/selectlist/<?php echo $playlist->id ?>" class="list-group-item active"><?php echo $playlist->name ?></a>
+					<?php else: ?>
+						<a href="<?=BASE_URL?>/selectlist/<?php echo $playlist->id ?>" class="list-group-item"><?php echo $playlist->name ?></a>
+					<?php endif; ?>
 					<?php endforeach; ?>
                 </div>
             </div>
@@ -20,7 +24,7 @@
             <div class="col-md-9">
 
                 <div class="thumbnail">
-                    <img class="img-responsive" src="http://placehold.it/800x300" alt="">
+                    <img class="img-responsive" src="<?php echo $_SESSION['plURL'] ?>" alt="">
                     <div class="caption-full">
                         <h4 class="pull-right">$24.99</h4>
                         <h4><a href="#">Product Name</a>
