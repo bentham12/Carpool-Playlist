@@ -93,5 +93,109 @@ class Db {
         }
       }
     }
+    //add a vote to the proposed_votes table along with the user's vote (function does not return anything)
+    public function ProposeVote($songID, $userID, $playlistID, $songName, $artistName, $albumSRC) {
+      if(($songID !== null) && ($userID !== null) && ($playlistID !== null) && ($songName !== null) && ($artistName !== null) && ($albumSRC !== null)) {
+        $queryVoteUpdate = sprintf("INSERT INTO vote_record(song_id, playlist_id, user_id, decision) VALUES('%s', '%s', '%s', 1);"
+          $songID,
+          $playlistID,
+          $userID
+        );
 
+        $queryProposedUpdate = sprintf("INSERT INTO proposed_votes(song_id, playlist_id, song_Name, artist_Name, album_src) VALUES('%s', '%s', '%s', '%s', '%s');"
+          $songID,
+          $playlistID,
+          $songName,
+          $artistName,
+          $albumSRC
+        );
+
+        //echo queryVoteUpdate
+        //echo queryProposedUpdate
+
+        $resultVote = mysql_query($queryVoteUpdate);
+
+        if(!$resultVote) {
+          $message = 'Invalid query in vote_record table: ' . mysql_error() . "/n";
+          $message .= 'Whole query: ' . $queryVoteUpdate;
+          die($message);
+        }
+
+        $resultProposed = mysql_query($queryProposedUpdate);
+
+        if(!$resultProposed) {
+          $message = 'Invalid query in the proposed_votes table: ' . mysql_error() . "/n";
+          $message .= 'Whole query: ' . $queryProposedUpdate;
+        } else {
+          return 0;
+        }
+      }
+    }
+
+    //change vote to Yes
+    public function ChangeVoteYes($songID, $playlistID, $userID) {
+      if(($songID !== null) && ($playlistID !== null) && (userID !== null)) {
+        $query = sprintf("UPDATE vote_record SET decision = 1 WHERE song_id = '%s' AND playlist_id = '%s' AND user_id = '%s';"
+          $songID,
+          $playlistID,
+          $userID
+        );
+
+        //echo $query
+
+        $result = mysql_query($query);
+
+        if(!$result){
+          $message = 'Invalid query: ' . mysql_error() . "/n";
+          $message .= 'Whole query: ' . $query;
+        } else {
+          return 0;
+        }
+      }
+    }
+
+    //change vote to No
+    public function ChangeVoteNo($songID, $playlistID, $userID) {
+      if(($songID !== null) && ($playlistID !== null) && (userID !== null)) {
+        $query = sprintf("UPDATE vote_record SET decision = 0 WHERE song_id = '%s' AND playlist_id = '%s' AND user_id = '%s';"
+          $songID,
+          $playlistID,
+          $userID
+        );
+
+        //echo $query
+
+        $result = mysql_query($query);
+
+        if(!$result){
+          $message = 'Invalid query: ' . mysql_error() . "/n";
+          $message .= 'Whole query: ' . $query;
+        } else {
+          return 0;
+        }
+      }
+    }
+
+    //change vote to Undecided
+    public function ChangeVoteUndecided($songID, $playlistID, $userID) {
+      if(($songID !== null) && ($playlistID !== null) && (userID !== null)) {
+        $query = sprintf("UPDATE vote_record SET decision = 2 WHERE song_id = '%s' AND playlist_id = '%s' AND user_id = '%s';"
+          $songID,
+          $playlistID,
+          $userID
+        );
+
+        //echo $query
+
+        $result = mysql_query($query);
+
+        if(!$result){
+          $message = 'Invalid query: ' . mysql_error() . "/n";
+          $message .= 'Whole query: ' . $query;
+        } else {
+          return 0;
+        }
+      }
+    }
+  }
 }
