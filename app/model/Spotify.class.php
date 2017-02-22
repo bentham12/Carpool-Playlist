@@ -21,10 +21,22 @@ class Db {
       self::$_instance = new Db();
     }
 
-    //display proposed songs from a selected playlist
+    //fixed
+    //display proposed songs and metadata from a selected playlist
+    //returns songID, song name, album cover url, artist name, and album name
     public function getPlaylistSongs($playlistID) {
       if ($playlistID !== null) {
-        $query = sprintf("SELECT * from proposed_votes WHERE playlist_id = '%s';",
+        $query = sprintf("SELECT playlistsong.song_id_fk,
+             songs.Name,
+             songs.AlbumCover,
+             songs.Artist,
+             album.Name,
+             FROM playlistsong,
+              songs,
+              album
+             WHERE playlistsong.playlist_id_fk = '%s'
+             AND playlistsong.song_id_fk = songs.ID
+             AND songs.AlbumCover = album.Name;",
           $playlistID
         );
         //echo $query;
@@ -41,7 +53,7 @@ class Db {
     }
 
     //returns the votes a specific user has made
-    public function getUsersVotes($songID, $playlistID, $userID) {
+    public function getUsersVotes($playlistID, $userID) {
       if(($songID !== null) && ($playlistID !== null) && ($userID !== null)) {
         $query = sprintf("SELECT decision from vote_record WHERE song_id = '%s' AND playlist_id = '%s' AND user_id = '%s' AND decision != 2;",
           $songID,
@@ -62,19 +74,20 @@ class Db {
       }
     }
 
+    //fixed
     //returns the net of song votes and the percent of votes (positive)
     public function getNetAndPercentVotes($playlistID, $songID) {
       if (($playlistID !== null) && (songID !== null)) {
-        $queryYes = sprintf("SELECT decision from vote_record WHERE song_id = '%s' AND playlist_id = '%s' AND decision = 1;"
-          $songID,
-          $playlistID
+        $playlistSongID = $playlistID . $songID;
+
+        $queryYes = sprintf("SELECT decision from vote_record WHERE vote_record.playlist_song_id = '%s' AND decision = 1;"
+          $playlistSongID
         );
 
         //echo $queryYes
 
-        $queryNo = sprintf("SELECT decision from vote_record WHERE song_id = '%s' AND playlist_id = '%s' AND decision = 0;"
-          $songID,
-          $playlist_id
+        $queryNo = sprintf("SELECT decision from vote_record WHERE vote_record.playlist_song_id = '%s' AND decision = 0;"
+          $playlistSongID
         );
 
         //echo $queryNo
@@ -93,39 +106,71 @@ class Db {
         }
       }
     }
+
+    //fixed
     //add a vote to the proposed_votes table along with the user's vote (function does not return anything)
-    public function ProposeVote($songID, $userID, $playlistID, $songName, $artistName, $albumSRC) {
-      if(($songID !== null) && ($userID !== null) && ($playlistID !== null) && ($songName !== null) && ($artistName !== null) && ($albumSRC !== null)) {
-        $queryVoteUpdate = sprintf("INSERT INTO vote_record(song_id, playlist_id, user_id, decision) VALUES('%s', '%s', '%s', 1);"
-          $songID,
-          $playlistID,
-          $userID
+    public function ProposeVote($songID, $userID, $playlistID, $songName, $artistName, $albumSRC, $albumName) {
+      if(($songID !== null) && ($userID !== null) && ($playlistID !== null) && ($songName !== null) && ($artistName !== null) && ($albumSRC !== null) && ($albumName !== null)) {
+
+        $playlistSongID = $playlistID . $songID;
+
+        $queryUpdate_vote_record = sprintf("INSERT INTO vote_record(user_id, decision, playlist_song_id) VALUES('%s', 1, '%s');"
+          $userID,
+          $playlistSongID
         );
 
-        $queryProposedUpdate = sprintf("INSERT INTO proposed_votes(song_id, playlist_id, song_Name, artist_Name, album_src) VALUES('%s', '%s', '%s', '%s', '%s');"
+        $queryUpdate_playlistsong = sprintf("INSERT INTO playlistsong(song_id_fk, playlist_id_fk, playlist_song_id) VALUES('%s', '%s', '%s');"
           $songID,
           $playlistID,
+          $playlistSongID
+        );
+
+        $queryUpdate_songs = sprintf("INSERT INTO songs(ID, Name, AlbumCover, Artist) VALUES('%s', '%s', '%s', '%s');"
+          $songID,
           $songName,
-          $artistName,
-          $albumSRC
+          $albumSRC,
+          $artistName
         );
 
-        //echo queryVoteUpdate
-        //echo queryProposedUpdate
+        $queryUpdate_album = sprintf("INSERT INTO album(Source, Name) VALUES('%s', '%s');"
+          $albumSRC,
+          $albumName
+        );
 
-        $resultVote = mysql_query($queryVoteUpdate);
 
-        if(!$resultVote) {
+        //echo $queryUpdate_vote_record
+        //echo $queryUpdate_playlistsong
+        //echo $queryUpdate_songs
+        //echo $queryUpdate_album
+
+        $resultUpdate_vote_record = mysql_query($queryUpdate_vote_record);
+        $resultUpdate_playlistsong = mysql_query($queryUpdate_playlistsong);
+        $resultUpdate_songs = mysql_query($queryUpdate_songs);
+        $resultUpdate_album = mysql_query($queryUpdate_album);
+
+
+        if(!$resultUpdate_vote_record) {
           $message = 'Invalid query in vote_record table: ' . mysql_error() . "/n";
-          $message .= 'Whole query: ' . $queryVoteUpdate;
+          $message .= 'Whole query: ' . $queryUpdate_vote_record;
           die($message);
         }
 
-        $resultProposed = mysql_query($queryProposedUpdate);
-
-        if(!$resultProposed) {
+        if(!$resultUpdate_playlistsong) {
           $message = 'Invalid query in the proposed_votes table: ' . mysql_error() . "/n";
-          $message .= 'Whole query: ' . $queryProposedUpdate;
+          $message .= 'Whole query: ' . $queryUpdate_playlistsong;
+          die($message);
+        }
+
+        if(!$resultUpdate_songs) {
+          $message = 'Invalid query in the proposed_votes table: ' . mysql_error() . "/n";
+          $message .= 'Whole query: ' . $queryUpdate_songs;
+          die($message);
+        }
+
+        if(!$resultUpdate_album) {
+          $message = 'Invalid query in the proposed_votes table: ' . mysql_error() . "/n";
+          $message .= 'Whole query: ' . $queryUpdate_album;
+          die($message);
         } else {
           return 0;
         }
