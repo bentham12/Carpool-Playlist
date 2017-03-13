@@ -52,11 +52,11 @@ class Db {
       }
     }
 
+    //fixed
     //returns the votes a specific user has made
     public function getUsersVotes($playlistID, $userID) {
       if(($songID !== null) && ($playlistID !== null) && ($userID !== null)) {
-        $query = sprintf("SELECT decision from vote_record WHERE song_id = '%s' AND playlist_id = '%s' AND user_id = '%s' AND decision != 2;",
-          $songID,
+        $query = sprintf("SELECT vote_record.decision from vote_record, playlistsong WHERE playlistsong.playlist_id_fk = '%s' AND playlistsong.playlist_song_id = vote_record.playlist_song_id AND vote_record.user_id = '%s' AND decision != 2;",
           $playlistID,
           $userID
         );
@@ -177,10 +177,11 @@ class Db {
       }
     }
 
+    //fixed
     //change vote to Yes
     public function ChangeVoteYes($songID, $playlistID, $userID) {
       if(($songID !== null) && ($playlistID !== null) && (userID !== null)) {
-        $query = sprintf("UPDATE vote_record SET decision = 1 WHERE song_id = '%s' AND playlist_id = '%s' AND user_id = '%s';"
+        $query = sprintf("UPDATE vote_record SET vote_record.decision = 1 WHERE playlistsong.song_id_fk = '%s' AND playlistsong.playlist_id_fk = '%s' AND playlistsong.playlist_song_id = vote_record.playlist_song_id AND vote_record.user_id = '%s';"
           $songID,
           $playlistID,
           $userID
@@ -199,10 +200,11 @@ class Db {
       }
     }
 
+    //fixed
     //change vote to No
     public function ChangeVoteNo($songID, $playlistID, $userID) {
       if(($songID !== null) && ($playlistID !== null) && (userID !== null)) {
-        $query = sprintf("UPDATE vote_record SET decision = 0 WHERE song_id = '%s' AND playlist_id = '%s' AND user_id = '%s';"
+        $query = sprintf("UPDATE vote_record SET vote_record.decision = 0 WHERE playlistsong.song_id_fk = '%s' AND playlistsong.playlist_id_fk = '%s' AND playlistsong.playlist_song_id = vote_record.playlist_song_id AND vote_record.user_id = '%s';"
           $songID,
           $playlistID,
           $userID
@@ -221,10 +223,11 @@ class Db {
       }
     }
 
+    //fixed
     //change vote to Undecided
     public function ChangeVoteUndecided($songID, $playlistID, $userID) {
       if(($songID !== null) && ($playlistID !== null) && (userID !== null)) {
-        $query = sprintf("UPDATE vote_record SET decision = 2 WHERE song_id = '%s' AND playlist_id = '%s' AND user_id = '%s';"
+        $query = sprintf("UPDATE vote_record SET vote_record.decision = 2 WHERE playlistsong.song_id_fk = '%s' AND playlistsong.playlist_id_fk = '%s' AND playlistsong.playlist_song_id = vote_record.playlist_song_id AND vote_record.user_id = '%s';"
           $songID,
           $playlistID,
           $userID
