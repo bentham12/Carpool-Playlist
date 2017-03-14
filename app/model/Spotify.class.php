@@ -122,7 +122,13 @@ class Db {
 
     //add a vote to the proposed_votes table along with the user's vote (function does not return anything)
     public function ProposeVote($songID, $userID, $playlistID, $songName, $artistName, $albumSRC, $albumName) {
-      if(($songID !== null) && ($userID !== null) && ($playlistID !== null) && ($songName !== null) && ($artistName !== null) && ($albumSRC !== null) && ($albumName !== null)) {
+      if(($songID !== null)
+      && ($userID !== null)
+      && ($playlistID !== null)
+      && ($songName !== null)
+      && ($artistName !== null)
+      && ($albumSRC !== null)
+      && ($albumName !== null)) {
 
         $playlistSongID = $playlistID . $songID;
 
@@ -306,7 +312,8 @@ class Db {
       }
     }
 
-    //grab songIDs that make the cutoff
+
 
   }
 }
+?>
