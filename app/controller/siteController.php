@@ -26,7 +26,7 @@ class SiteController {
 			case 'home':
 				$this->home();
 				break;
-			
+
 			case 'login':
 				$this->login();
 				break;
@@ -34,11 +34,11 @@ class SiteController {
 			case 'loginProcess':
 				$this->loginProcess();
 				break;
-				
+
 			case 'search':
 				$this->search($_GET['term']);
 				break;
-				
+
 			case 'selectlist':
 				$this->selectlist($_GET['list']);
 				break;
@@ -54,9 +54,9 @@ class SiteController {
 
   public function home() {
 		$pageName = 'Home';
-		
+
 		$session = new SpotifyWebAPI\Session('440c0bbf7ed7432ba9dad860846feabd', 'b903d161500c40fca04251d615f04c03', BASE_URL."/home/");
-		
+
 		$api = new SpotifyWebAPI\SpotifyWebAPI();
 
 		/*
@@ -66,7 +66,7 @@ class SiteController {
 
 		// Set the access token on the API wrapper
 		$api->setAccessToken($accessToken);*/
-		
+
 		if (isset($_GET['code'])) {
 			$session->requestAccessToken($_GET['code']);
 			$api->setAccessToken($session->getAccessToken());
@@ -80,9 +80,8 @@ class SiteController {
 			)));
 			die();
 		}
-		
+
 		$playlists = $api->getMyPlaylists(array());
-		
 		foreach ($playlists->items as $playlist) {
 			if ($playlist->collaborative) {
 				$collabPlay[] = $playlist;
@@ -94,15 +93,16 @@ class SiteController {
 				}
 			}
 		}
-		
+
+
 		include_once SYSTEM_PATH.'/view/header.tpl';
 		include_once SYSTEM_PATH.'/view/user_page.tpl';
   }
-  
+
   public function selectlist($list) {
 	  $_SESSION['plID'] = $list;
 	  $session = new SpotifyWebAPI\Session('440c0bbf7ed7432ba9dad860846feabd', 'b903d161500c40fca04251d615f04c03', BASE_URL."/home/");
-		
+
 		$api = new SpotifyWebAPI\SpotifyWebAPI();
 
 		/*
@@ -112,7 +112,7 @@ class SiteController {
 
 		// Set the access token on the API wrapper
 		$api->setAccessToken($accessToken);*/
-		
+
 		if (isset($_GET['code'])) {
 			$session->requestAccessToken($_GET['code']);
 			$api->setAccessToken($session->getAccessToken());
@@ -126,22 +126,22 @@ class SiteController {
 			)));
 			die();
 		}
-		
+
 		$playlists = $api->getMyPlaylists(array());
-		
+
 		foreach ($playlists->items as $playlist) {
 			if ($playlist->id == $list) {
 				$current_pl = $playlist;
 				break;
 			}
 		}
-		
+
 		$_SESSION['plNAME'] = $current_pl->name;
 		$_SESSION['plURL'] = $current_pl->images[0]->url;
-	  
+
 	  header('Location: '.BASE_URL.'/home/');
   }
-  
+
   public function search($search_term)
   {
 		$api = new SpotifyWebAPI\SpotifyWebAPI();
@@ -150,19 +150,19 @@ class SiteController {
 		foreach ($results->tracks->items as $track) {
 			$track_listing[] = $track;
 		}
-	  
+
 		include_once SYSTEM_PATH.'/view/header.tpl';
 		include_once SYSTEM_PATH.'/view/search_results.tpl';
   }
 
-	public function login() {			
+	public function login() {
 		global $session;
-		
+
 		$pageName = "Login";
 		// include_once SYSTEM_PATH.'/view/header.tpl';
 		include_once SYSTEM_PATH.'/view/login.tpl';
 		$session = new SpotifyWebAPI\Session('440c0bbf7ed7432ba9dad860846feabd', 'b903d161500c40fca04251d615f04c03', BASE_URL."/home/");
-		
+
 		$scopes = array(
 			'playlist-read-private',
 			'user-read-private',
@@ -171,23 +171,23 @@ class SiteController {
 		$authorizeUrl = $session->getAuthorizeUrl(array(
 			'scope' => $scopes
 		));
-		
+
 		$_SESSION['user'] = "user";
-		
+
 		header('Location: ' . $authorizeUrl);
-		
+
 		die();
 		// include_once SYSTEM_PATH.'/view/footer.tpl';
 	}
-	
+
 	public function loginProcess() {
 		global $session;
 		global $accessToken;
-		
+
 		print_r($session);
-		
-		
-		
+
+
+
 		//header('Location: ' .BASE_URL."/home/");
 	}
 }

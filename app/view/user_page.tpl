@@ -11,6 +11,7 @@
             <div class="col-md-3">
                 <p class="lead">Collaborative Playlists</p>
                 <div class="list-group">
+          <?php if (isset($playlist)): ?>
 					<?php foreach ($collabPlay as $playlist): ?>
 					<?php if (isset($_SESSION['plID']) && $playlist->id == $_SESSION['plID']): ?>
 						<a href="<?=BASE_URL?>/selectlist/<?php echo $playlist->id ?>" class="list-group-item active"><?php echo $playlist->name ?></a>
@@ -18,6 +19,9 @@
 						<a href="<?=BASE_URL?>/selectlist/<?php echo $playlist->id ?>" class="list-group-item"><?php echo $playlist->name ?></a>
 					<?php endif; ?>
 					<?php endforeach; ?>
+          <?php else: ?>
+            <p>Looks like you don't have any collaborative playlists. :(</p> <!-- should create a way/link for them to make a collaborative playlist-->
+          <?php endif; ?>
                 </div>
             </div>
 
